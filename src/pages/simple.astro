@@ -1,0 +1,37 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+---
+
+<Layout>
+  <div class="min-h-screen bg-slate-50 text-slate-800">
+    <main class="mx-auto max-w-6xl px-5 py-8">
+      <Header />
+
+      <header class="mb-10 border-b border-slate-300 pb-7">
+        <h1 class="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+          Plot in vanilla HTML
+        </h1>
+        <p class="mt-3 text-base text-slate-600">
+          Premier essai avec Observable Plot côté client.
+        </p>
+      </header>
+
+      <section class="border border-slate-200 bg-white p-5">
+        <div id="myplot"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    import * as Plot from "@observablehq/plot";
+
+    const plot = Plot.rectY(
+      { length: 10000 },
+      Plot.binX({ y: "count" }, { x: Math.random }),
+    ).plot();
+
+    const div = document.querySelector("#myplot");
+    div?.append(plot);
+  </script>
+</Layout>

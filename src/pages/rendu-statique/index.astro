@@ -1,0 +1,40 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import penguins from "../../assets/penguins.json";
+
+const species = [...new Set(penguins.map((penguin) => penguin.species))];
+---
+
+<Layout>
+  <div class="min-h-screen bg-slate-50 text-slate-800">
+    <main class="mx-auto max-w-6xl px-5 py-8">
+      <Header />
+
+      <header class="mb-10 border-b border-slate-300 pb-7">
+        <h1 class="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+          Rendu statique des Penguins
+        </h1>
+        <p class="mt-3 text-base text-slate-600">
+          Choisissez une espèce pour afficher son graphique sur une page générée
+          statiquement.
+        </p>
+      </header>
+
+      <ul class="grid gap-3 sm:grid-cols-3">
+        {
+          species.map((currentSpecies) => (
+            <li>
+              <a
+                href={`/rendu-statique/${currentSpecies}/`}
+                class="block border border-slate-200 bg-white px-4 py-3 font-medium text-slate-700 shadow-sm transition hover:border-slate-400 hover:bg-slate-100"
+              >
+                Penguins {currentSpecies}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </main>
+  </div>
+</Layout>

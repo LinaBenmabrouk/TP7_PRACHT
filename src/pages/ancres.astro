@@ -1,0 +1,99 @@
+---
+import Layout from "../layouts/Layout.astro";
+import GraphicSpecies from "../components/GraphicSpecies.astro";
+import Header from "../components/Header.astro";
+---
+
+<Layout>
+  <div class="min-h-screen bg-slate-50 text-slate-800">
+    <main class="mx-auto max-w-6xl px-5 py-8">
+      <Header />
+
+      <header class="mb-10 border-b border-slate-300 pb-7">
+        <h1 class="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+          Les espèces de Penguins
+        </h1>
+
+        <p class="mt-3 text-base text-slate-600">
+          Visualisation des différentes espèces de manchots.
+        </p>
+      </header>
+
+      <label for="species-anchor" class="sr-only">Choisir une espèce</label>
+      <select
+        id="species-anchor"
+        class="mb-8 cursor-pointer rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm outline-none transition hover:border-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+      >
+        <option value="Adelie">Adelie</option>
+        <option value="Gentoo">Gentoo</option>
+        <option value="Chinstrap">Chinstrap</option>
+      </select>
+
+      <div class="flex overflow-x-auto">
+        <section id="Adelie" class="item min-w-full border border-slate-200 bg-white">
+          <div class="border-b border-slate-200 px-5 py-4">
+            <h2 class="text-xl font-semibold">Penguins Adelie</h2>
+          </div>
+          <div class="overflow-x-auto px-3 py-5">
+            <GraphicSpecies species="Adelie" />
+          </div>
+        </section>
+
+        <section id="Gentoo" class="item min-w-full border border-slate-200 bg-white">
+          <div class="border-b border-slate-200 px-5 py-4">
+            <h2 class="text-xl font-semibold">Penguins Gentoo</h2>
+          </div>
+          <div class="overflow-x-auto px-3 py-5">
+            <GraphicSpecies species="Gentoo" />
+          </div>
+        </section>
+
+        <section id="Chinstrap" class="item min-w-full border border-slate-200 bg-white">
+          <div class="border-b border-slate-200 px-5 py-4">
+            <h2 class="text-xl font-semibold">Penguins Chinstrap</h2>
+          </div>
+          <div class="overflow-x-auto px-3 py-5">
+            <GraphicSpecies species="Chinstrap" />
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const speciesSelect = document.querySelector("#species-anchor") as HTMLSelectElement | null;
+    const items = document.querySelectorAll(".item");
+    const speciesIds = new Set(["Adelie", "Gentoo", "Chinstrap"]);
+
+    speciesSelect?.addEventListener("change", (event) => {
+      const select = event.currentTarget as HTMLSelectElement;
+      window.location.hash = select.value;
+    });
+
+    const updateSelectFromHash = () => {
+      const hash = window.location.hash.slice(1);
+
+      if (speciesIds.has(hash) && speciesSelect) {
+        speciesSelect.value = hash;
+      }
+    };
+
+    updateSelectFromHash();
+    window.addEventListener("hashchange", updateSelectFromHash);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const id = entry.target.getAttribute("id");
+
+          if (entry.isIntersecting && id && speciesSelect) {
+            speciesSelect.value = id;
+          }
+        });
+      },
+      { threshold: 0.5 },
+    );
+
+    items.forEach((item) => observer.observe(item));
+  </script>
+</Layout>

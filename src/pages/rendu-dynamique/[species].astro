@@ -1,0 +1,52 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import GraphicSpecies from "../../components/GraphicSpecies.astro";
+import penguins from "../../assets/penguins.json";
+
+export const prerender = false;
+
+const { species } = Astro.params;
+const availableSpecies = [...new Set(penguins.map((penguin) => penguin.species))];
+const isValidSpecies = species !== undefined && availableSpecies.includes(species);
+
+if (!isValidSpecies) {
+  Astro.response.status = 404;
+}
+---
+
+<Layout>
+  <div class="min-h-screen bg-slate-50 text-slate-800">
+    <main class="mx-auto max-w-6xl px-5 py-8">
+      <Header />
+
+      {
+        isValidSpecies ? (
+          <>
+            <header class="mb-10 border-b border-slate-300 pb-7">
+              <h1 class="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+                Penguins {species}
+              </h1>
+              <p class="mt-3 text-base text-slate-600">
+                Graphique de l'espèce reçue par le paramètre de route.
+              </p>
+            </header>
+
+            <section class="border border-slate-200 bg-white">
+              <div class="overflow-x-auto px-3 py-5 sm:px-7">
+                <GraphicSpecies species={species} />
+              </div>
+            </section>
+          </>
+        ) : (
+          <>
+            <h1 class="text-3xl font-semibold text-slate-950">Espèce introuvable</h1>
+            <p class="mt-3 text-slate-600">
+              L'espèce « {species ?? "inconnue"} » ne figure pas dans le dataset.
+            </p>
+          </>
+        )
+      }
+    </main>
+  </div>
+</Layout>

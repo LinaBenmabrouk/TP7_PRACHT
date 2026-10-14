@@ -1,0 +1,113 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+---
+
+<Layout>
+  <div class="min-h-screen bg-slate-50 text-slate-800">
+    <main class="mx-auto max-w-6xl px-5 py-8">
+      <Header />
+
+      <header class="mb-10 border-b border-slate-300 pb-7">
+        <h1 class="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+          Voitures avec plusieurs filtres
+        </h1>
+        <p class="mt-3 text-base text-slate-600">
+          Filtrer les voitures par année et par nombre de cylindres.
+        </p>
+      </header>
+
+      <section class="border border-slate-200 bg-white p-5">
+        <div class="flex flex-wrap gap-5">
+          <div>
+            <label for="year-filter" class="mb-2 block text-sm font-medium text-slate-700">
+              Année
+            </label>
+            <select
+              id="year-filter"
+              class="cursor-pointer rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm outline-none transition hover:border-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            >
+              <option value="">Toutes les années</option>
+              <option value="70">1970</option>
+              <option value="71">1971</option>
+              <option value="72">1972</option>
+              <option value="73">1973</option>
+              <option value="74">1974</option>
+              <option value="75">1975</option>
+              <option value="76">1976</option>
+              <option value="77">1977</option>
+              <option value="78">1978</option>
+              <option value="79">1979</option>
+              <option value="80">1980</option>
+              <option value="81">1981</option>
+              <option value="82">1982</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="cylinders-filter" class="mb-2 block text-sm font-medium text-slate-700">
+              Cylindres
+            </label>
+            <select
+              id="cylinders-filter"
+              class="cursor-pointer rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm outline-none transition hover:border-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            >
+              <option value="">Tous les nombres de cylindres</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="8">8</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="myplot" class="mt-6"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    import * as Plot from "@observablehq/plot";
+    import cars from "../../assets/cars.json";
+
+    const yearFilter = document.querySelector("#year-filter") as HTMLSelectElement;
+    const cylindersFilter = document.querySelector("#cylinders-filter") as HTMLSelectElement;
+    const plotContainer = document.querySelector("#myplot") as HTMLDivElement;
+
+    function renderPlot() {
+      const year = yearFilter.value;
+      const cylinders = cylindersFilter.value;
+      const filteredCars = cars.filter((car) => {
+        const matchesYear = !year || String(car.year) === year;
+        const matchesCylinders = !cylinders || String(car.cylinders) === cylinders;
+
+        return matchesYear && matchesCylinders;
+      });
+
+      plotContainer.replaceChildren();
+
+      const plot = Plot.plot({
+        grid: true,
+        color: { legend: true },
+        x: { label: "Puissance (hp)" },
+        y: { label: "Consommation (mpg)" },
+        marks: [
+          Plot.dot(filteredCars, {
+            x: "power (hp)",
+            y: "economy (mpg)",
+            fill: "cylinders",
+            tip: true,
+          }),
+        ],
+      });
+
+      plotContainer.append(plot);
+    }
+
+    [yearFilter, cylindersFilter].forEach((select) => {
+      select.addEventListener("change", renderPlot);
+    });
+    renderPlot();
+  </script>
+</Layout>

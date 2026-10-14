@@ -1,0 +1,142 @@
+---
+import Fleche from "../../public/fleche_bas.svg";
+---
+
+<header class="mb-8 border-b border-slate-200 pb-4">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <a
+      href="/"
+      class="text-lg font-semibold text-slate-950 transition hover:text-slate-600 sm:text-xl"
+    >
+      TP Observable Plot
+    </a>
+
+    <nav
+      class="flex flex-wrap items-center justify-end gap-2 text-sm"
+      aria-label="Navigation principale"
+    >
+      <details class="relative">
+        <summary
+          class="flex cursor-pointer list-none items-center gap-1 rounded-md px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
+        >
+          Explorer
+          <Fleche aria-hidden="true" class="h-3 w-3" />
+        </summary>
+        <div
+          class="absolute right-0 top-full z-20 mt-1 grid min-w-44 overflow-hidden rounded-md border border-slate-200 bg-white py-1 shadow-lg"
+        >
+          <a href="/ancres" class="px-4 py-2 hover:bg-slate-100">Ancres</a>
+          <a href="/tabs/" class="px-4 py-2 hover:bg-slate-100">Onglets</a>
+          <a href="/iframe/" class="px-4 py-2 hover:bg-slate-100">Iframe</a>
+          <a href="/simple" class="px-4 py-2 hover:bg-slate-100">Plot simple</a>
+        </div>
+      </details>
+
+      <details class="relative">
+        <summary
+          class="flex cursor-pointer list-none items-center gap-1 rounded-md px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
+        >
+          Voitures
+          <Fleche aria-hidden="true" class="h-3 w-3" />
+        </summary>
+        <div
+          class="absolute right-0 top-full z-20 mt-1 grid min-w-52 overflow-hidden rounded-md border border-slate-200 bg-white py-1 shadow-lg"
+        >
+          <a href="/cars/" class="px-4 py-2 hover:bg-slate-100">Vue simple</a>
+          <a href="/cars/cars-filter/" class="px-4 py-2 hover:bg-slate-100">
+            Filtre par année
+          </a>
+          <a href="/cars/cars-multiple-filters/" class="px-4 py-2 hover:bg-slate-100">
+            Plusieurs filtres
+          </a>
+          <a href="/cars/year/" class="px-4 py-2 hover:bg-slate-100">
+            Routes par année
+          </a>
+        </div>
+      </details>
+
+      <details class="relative">
+        <summary
+          class="flex cursor-pointer list-none items-center gap-1 rounded-md px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
+        >
+          Penguins
+          <Fleche aria-hidden="true" class="h-3 w-3" />
+        </summary>
+        <div
+          class="absolute right-0 top-full z-20 mt-1 grid min-w-52 overflow-hidden rounded-md border border-slate-200 bg-white py-1 shadow-lg"
+        >
+          <a href="/penguins/" class="px-4 py-2 hover:bg-slate-100">Vue simple</a>
+          <a href="/penguins/penguin-filter/" class="px-4 py-2 hover:bg-slate-100">
+            Filtre par espèce
+          </a>
+          <a href="/penguins/penguin-multiple-filters/" class="px-4 py-2 hover:bg-slate-100">
+            Plusieurs filtres
+          </a>
+        </div>
+      </details>
+
+      <details class="relative">
+        <summary
+          class="flex cursor-pointer list-none items-center gap-1 rounded-md px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
+        >
+          Météo
+          <Fleche aria-hidden="true" class="h-3 w-3" />
+        </summary>
+        <div
+          class="absolute right-0 top-full z-20 mt-1 grid min-w-52 overflow-hidden rounded-md border border-slate-200 bg-white py-1 shadow-lg"
+        >
+          <a href="/weather/" class="px-4 py-2 hover:bg-slate-100">Vue simple</a>
+          <a href="/weather/weather-filter/" class="px-4 py-2 hover:bg-slate-100">
+            Filtre par ville
+          </a>
+          <a href="/weather/weather-multiple-filters/" class="px-4 py-2 hover:bg-slate-100">
+            Plusieurs filtres
+          </a>
+        </div>
+      </details>
+
+      <details class="relative">
+        <summary
+          class="flex cursor-pointer list-none items-center gap-1 rounded-md px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
+        >
+          Routes paramétriques
+          <Fleche aria-hidden="true" class="h-3 w-3" />
+        </summary>
+        <div
+          class="absolute right-0 top-full z-20 mt-1 grid min-w-52 overflow-hidden rounded-md border border-slate-200 bg-white py-1 shadow-lg"
+        >
+          <a href="/cars/year/" class="px-4 py-2 hover:bg-slate-100">
+            Voitures par année
+          </a>
+          <a href="/rendu-dynamique/" class="px-4 py-2 hover:bg-slate-100">
+            Penguins en rendu dynamique
+          </a>
+          <a href="/rendu-statique/" class="px-4 py-2 hover:bg-slate-100">
+            Penguins en rendu statique
+          </a>
+          <a href="/species/Adelie/" class="px-4 py-2 hover:bg-slate-100">Espèce : Adelie</a>
+          <a href="/species/Chinstrap/" class="px-4 py-2 hover:bg-slate-100">
+            Espèce : Chinstrap
+          </a>
+          <a href="/species/Gentoo/" class="px-4 py-2 hover:bg-slate-100">Espèce : Gentoo</a>
+        </div>
+      </details>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const menus = Array.from(document.querySelectorAll<HTMLDetailsElement>("nav details"));
+
+  menus.forEach((menu) => {
+    menu.addEventListener("toggle", () => {
+      if (menu.open) {
+        menus.forEach((otherMenu) => {
+          if (otherMenu !== menu) {
+            otherMenu.open = false;
+          }
+        });
+      }
+    });
+  });
+</script>
