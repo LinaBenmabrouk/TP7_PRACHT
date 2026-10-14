@@ -48,6 +48,14 @@ import Header from "../../components/Header.astro";
       plotContainer.replaceChildren();
 
       const plot = Plot.plot({
+        title: location
+          ? `Vent et température maximale à ${location}`
+          : "Vent et température maximale dans toutes les villes",
+        subtitle: "Les points sont colorés selon le type de météo.",
+        caption: "Figure 1. Relation entre le vent et la température maximale des relevés filtrés.",
+        ariaLabel: location
+          ? `Nuage de points représentant le vent et la température maximale à ${location}.`
+          : "Nuage de points représentant le vent et la température maximale dans toutes les villes.",
         grid: true,
         color: { legend: true },
         x: { label: "Vent" },

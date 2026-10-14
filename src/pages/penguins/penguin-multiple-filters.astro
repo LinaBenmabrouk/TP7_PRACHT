@@ -97,6 +97,10 @@ import Header from "../../components/Header.astro";
       plotContainer.replaceChildren();
 
       const plot = Plot.plot({
+        title: "Longueur et profondeur du bec des manchots filtrés",
+        subtitle: "Les résultats sont filtrés selon l'espèce, l'île et le sexe.",
+        caption: "Figure 1. Relation entre la longueur et la profondeur du bec des manchots sélectionnés.",
+        ariaLabel: "Nuage de points représentant la longueur et la profondeur du bec des manchots après filtrage.",
         grid: true,
         color: {
           legend: true,

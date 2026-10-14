@@ -71,6 +71,10 @@ import Header from "../../components/Header.astro";
       plotContainer.replaceChildren();
 
       const plot = Plot.plot({
+        title: "Vent et température maximale des relevés filtrés",
+        subtitle: "Les résultats sont filtrés selon la ville et le type de météo.",
+        caption: "Figure 1. Relation entre le vent et la température maximale des relevés sélectionnés.",
+        ariaLabel: "Nuage de points représentant le vent et la température maximale après filtrage.",
         grid: true,
         color: { legend: true },
         x: { label: "Vent" },

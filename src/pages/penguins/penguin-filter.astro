@@ -53,6 +53,14 @@ import Header from "../../components/Header.astro";
       plotContainer.replaceChildren();
 
       const plot = Plot.plot({
+        title: species
+          ? `Longueur et profondeur du bec des ${species}`
+          : "Longueur et profondeur du bec de tous les manchots",
+        subtitle: "Les points sont colorés selon l'espèce.",
+        caption: "Figure 1. Relation entre la longueur et la profondeur du bec des manchots filtrés.",
+        ariaLabel: species
+          ? `Nuage de points représentant la longueur et la profondeur du bec des manchots ${species}.`
+          : "Nuage de points représentant la longueur et la profondeur du bec de tous les manchots.",
         grid: true,
         color: {
           legend: true,

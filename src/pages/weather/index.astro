@@ -28,6 +28,10 @@ import Header from "../../components/Header.astro";
     import weather from "../../assets/weather.json";
 
     const plot = Plot.plot({
+      title: "Vent et température maximale",
+      subtitle: "Les points sont colorés selon le type de météo.",
+      caption: "Figure 1. Relation entre la vitesse du vent et la température maximale.",
+      ariaLabel: "Nuage de points représentant la relation entre le vent et la température maximale.",
       grid: true,
       color: { legend: true },
       x: { label: "Vent" },

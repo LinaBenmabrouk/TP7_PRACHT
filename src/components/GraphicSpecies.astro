@@ -17,6 +17,10 @@ const plot = Plot.plot({
   document: new JSDOM("").window.document,
   marginTop: 36,
   marginBottom: 48,
+  title: `Longueur et profondeur du bec des manchots ${species}`,
+  subtitle: "Chaque point représente un individu observé.",
+  caption: `Figure 1. Relation entre la longueur et la profondeur du bec pour l'espèce ${species}.`,
+  ariaLabel: `Nuage de points représentant la longueur et la profondeur du bec des manchots ${species}.`,
   color: {
     domain: ["Adelie", "Chinstrap", "Gentoo"],
     range: ["#377eb8", "#ffd92f", "#e41a1c"],

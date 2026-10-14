@@ -3,7 +3,13 @@ import * as Plot from "@observablehq/plot";
 import { JSDOM } from "jsdom";
 const { options } = Astro.props;
 
-const plot = Plot.plot({ ...options, document: new JSDOM("").window.document });
+const plot = Plot.plot({
+  ...options,
+  subtitle: options.subtitle ?? "Les points représentent les observations du jeu de données.",
+  caption: options.caption ?? "Figure 1. Visualisation des données sous forme de graphique.",
+  ariaLabel: options.ariaLabel ?? options.title ?? "Graphique de données.",
+  document: new JSDOM("").window.document,
+});
 ---
 
 <div set:html={plot.outerHTML} />

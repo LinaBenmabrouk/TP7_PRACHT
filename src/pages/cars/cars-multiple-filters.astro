@@ -88,6 +88,10 @@ import Header from "../../components/Header.astro";
       plotContainer.replaceChildren();
 
       const plot = Plot.plot({
+        title: "Puissance et consommation des voitures filtrées",
+        subtitle: "Les résultats sont filtrés selon l'année et le nombre de cylindres.",
+        caption: "Figure 1. Relation entre la puissance et la consommation des voitures sélectionnées.",
+        ariaLabel: "Nuage de points représentant la puissance et la consommation des voitures après filtrage.",
         grid: true,
         color: { legend: true },
         x: { label: "Puissance (hp)" },
