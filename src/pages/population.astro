@@ -1,6 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
+import populationMain from "../assets/populationMain.json";
+
+const listePeriode = [...new Set(populationMain.map((entry) => entry["Période"]))].sort(
+  (a, b) => b - a
+);
+const listeSexe = [...new Set(populationMain.map((entry) => entry["Sexe"]))].sort();
+const listeAge = [...new Set(populationMain.map((entry) => entry["Âge"]))].sort((a, b) =>
+  a.localeCompare(b, "fr")
+);
 ---
 
 <Layout>
@@ -16,6 +25,56 @@ import Header from "../components/Header.astro";
           Carte générée côté client à partir des données GeoJSON et du fichier de population.
         </p>
       </header>
+
+      <section class="mb-6 border border-slate-200 bg-white p-5">
+        <h2 class="mb-4 text-lg font-semibold text-slate-950">Paramètres de la carte</h2>
+        <div class="flex flex-wrap gap-5">
+          <div>
+            <label for="periode" class="mb-2 block text-sm font-medium text-slate-700">
+              Période
+            </label>
+            <select id="periode" aria-label="Sélectionner une période" class="rounded-md border border-slate-300 bg-white px-3 py-2">
+              {
+                listePeriode.map((periode) => (
+                  <option value={periode} selected={periode === 2021}>
+                    {periode}
+                  </option>
+                ))
+              }
+            </select>
+          </div>
+
+          <div>
+            <label for="sexe" class="mb-2 block text-sm font-medium text-slate-700">
+              Sexe
+            </label>
+            <select id="sexe" aria-label="Sélectionner un sexe" class="rounded-md border border-slate-300 bg-white px-3 py-2">
+              {
+                listeSexe.map((sexe) => (
+                  <option value={sexe} selected={sexe === "Total"}>
+                    {sexe}
+                  </option>
+                ))
+              }
+            </select>
+          </div>
+
+          <div>
+            <label for="age" class="mb-2 block text-sm font-medium text-slate-700">
+              Âge
+            </label>
+            <select id="age" aria-label="Sélectionner un âge" class="rounded-md border border-slate-300 bg-white px-3 py-2">
+              {
+                listeAge.map((age) => (
+                  <option value={age} selected={age === "Total"}>
+                    {age.trim()}
+                  </option>
+                ))
+              }
+            </select>
+          </div>
+        </div>
+      </section>
 
       <figure class="overflow-x-auto border border-slate-200 bg-white p-3 sm:p-5">
         <div
@@ -38,54 +97,67 @@ import Header from "../components/Header.astro";
   import populationMain from "../assets/populationMain.json";
   import departements from "../assets/departements.geojson.json";
 
-  const selectedPeriod = 2021;
-  const selectedSex = "Total";
-  const selectedAge = "Total";
+  const elmYear = document.getElementById("periode") as HTMLSelectElement;
+  const elmSex = document.getElementById("sexe") as HTMLSelectElement;
+  const elmAge = document.getElementById("age") as HTMLSelectElement;
+  const mapContainer = document.querySelector("#population-map") as HTMLDivElement;
 
-  const populationByDepartment = new Map(
-    populationMain
-      .filter(
-        (entry) =>
-          entry["Période"] === selectedPeriod &&
-          entry["Sexe"] === selectedSex &&
-          entry["Âge"] === selectedAge
-      )
-      .map((entry) => [entry["Géographie"], entry.Valeur])
-  );
+  function renderMap() {
+    const selectedPeriod = Number(elmYear.value);
+    const selectedSex = elmSex.value;
+    const selectedAge = elmAge.value;
 
-  const features = departements.features.map((feature) => ({
-    ...feature,
-    properties: {
-      ...feature.properties,
-      population: populationByDepartment.get(feature.properties.nom) ?? null,
-    },
-  }));
+    const populationByDepartment = new Map(
+      populationMain
+        .filter(
+          (entry) =>
+            entry["Période"] === selectedPeriod &&
+            entry["Sexe"] === selectedSex &&
+            entry["Âge"] === selectedAge
+        )
+        .map((entry) => [entry["Géographie"], entry.Valeur])
+    );
 
-  const plot = Plot.plot({
-    width: 960,
-    height: 680,
-    title: "Population des départements français en 2021",
-    subtitle: "Population totale, tous sexes et tous âges confondus.",
-    caption: "Figure 1. Population départementale selon les données du recensement.",
-    ariaLabel: "Carte choroplèthe de la population des départements français en 2021.",
-    projection: {
-      type: "mercator",
-      domain: { type: "FeatureCollection", features },
-    },
-    color: {
-      scheme: "YlGnBu",
-      label: "Population",
-      unknown: "#e5e7eb",
-    },
-    marks: [
-      Plot.geo(features, {
-        fill: "population",
-        stroke: "white",
-        strokeWidth: 0.5,
-        tip: true,
-      }),
-    ],
+    const features = departements.features.map((feature) => ({
+      ...feature,
+      properties: {
+        ...feature.properties,
+        population: populationByDepartment.get(feature.properties.nom) ?? null,
+      },
+    }));
+
+    const plot = Plot.plot({
+      width: 960,
+      height: 680,
+      title: `Population des départements français en ${selectedPeriod}`,
+      subtitle: `Population selon le sexe « ${selectedSex} » et l'âge « ${selectedAge.trim()} ».`,
+      caption: "Figure 1. Population départementale selon les données du recensement.",
+      ariaLabel: `Carte choroplèthe de la population des départements français en ${selectedPeriod}.`,
+      projection: {
+        type: "mercator",
+        domain: { type: "FeatureCollection", features },
+      },
+      color: {
+        scheme: "YlGnBu",
+        label: "Population",
+        legend: true,
+        unknown: "#e5e7eb",
+      },
+      marks: [
+        Plot.geo(features, {
+          fill: "population",
+          stroke: "white",
+          strokeWidth: 0.5,
+          tip: true,
+        }),
+      ],
+    });
+
+    mapContainer.replaceChildren(plot);
+  }
+
+  [elmYear, elmSex, elmAge].forEach((select) => {
+    select.addEventListener("change", renderMap);
   });
-
-  document.querySelector("#population-map")?.replaceChildren(plot);
+  renderMap();
 </script>
